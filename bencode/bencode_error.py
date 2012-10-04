@@ -1,0 +1,2 @@
+class BencodeError (Exception):
+    pass

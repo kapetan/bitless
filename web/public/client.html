@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script type="text/javascript" src="js/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="js/jQuery.file.button.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+
+    <style type="text/css">
+      html, body {
+      height:100%;
+      }
+
+      body {
+      margin:0;
+      padding:0;
+      font-family:"Helvetica Neue", Helvetica, sans-serif;
+      }
+
+      tt {
+      font-size:125%%;
+      }
+
+      a, a:visited {
+      color:green;
+      }
+
+      a:hover {
+      text-decoration:none;
+      }
+
+      #site-header {
+      padding:5px;
+      padding-left:20px;
+      border-top:1px solid #6B90DA;
+      /*border-bottom:1px solid #6B90DA;*/
+      color:#666;
+      font-size:300%;
+      background: -webkit-gradient(linear, left top, left bottom, from(#EBEFF9), to(white));
+      background: -moz-linear-gradient(top, #EBEFF9, white);
+      }
+
+      #site-header > img {
+      width:60px;
+      padding-left:10px;
+      }
+
+      #site-content > table {
+      width:100%;
+      border-bottom:1px solid #6B90DA;
+      }
+
+      #filter {
+      width:15%;
+      border:1px solid lightgrey;
+      }
+
+      .icon {
+      border-radius:5px;
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:75%;
+      display:inline-block;
+      width:48px;
+      height:48px;
+      border:1px solid white;
+      }
+
+      .icon:hover {
+      background-color:#EEE;
+      border-color:#CCC;
+      }
+
+      .delimeter {
+      display:inline-block;
+      height:48px;
+      width:1px;
+      background-color:#6B90DA;
+      }
+
+      #add-torrent {
+      background-image:url('file_add.png');
+      }
+
+      #download-torrent {
+      background-image:url('direction_down.png');
+      }
+
+      #create-torrent {
+      background-image:url('file_edit.png');
+      }
+
+      #remove-torrent {
+      background-image:url('file_delete.png');
+      }
+
+      #play-torrent {
+      background-image:url('player_play.png');
+      }
+
+      #pause-torrent {
+      background-image:url('player_pause.png');
+      }
+
+      #stop-torrent {
+      background-image:url('player_stop.png');
+      }
+
+      #configure {
+      background-image:url('application.png');
+      }
+
+      #torrents, #info {
+      width:100%;
+      border-collapse: collapse;
+      border:1px solid lightgrey;
+      }
+
+      #torrents, #info {
+      font-size:80%;
+      empty-cells:show;
+      }
+
+      #torrents th, #info th {
+      text-align:left;
+      width:100px;
+      padding:5px;
+      font-weight:normal;
+      border:1px solid lightgrey;
+      }
+
+      #torrents td, #info td {
+      padding:3px;
+      }
+
+      #torrents > thead, #info > thead {
+      background: -webkit-gradient(linear, left top, left bottom, from(white), to(#F1F1F1));
+      background: -moz-linear-gradient(top, white, #F1F1F1);
+      }
+
+      #torrents a {
+      font-weight:bold;
+      }
+
+      #info {
+      }
+
+      #info-header {
+      height:30px;
+      background-color:#EBEFF9;
+      border-bottom:1px solid #6B90DA;
+      }
+
+      #info-header > span {
+      background-color:white;
+      position:relative;
+      padding:3px 20px;
+      float:left;
+      margin:8px;
+      border:1px solid #6B90DA;
+      border-bottom:none;
+      font-weight:bold;
+      font-size:80%;
+      }
+
+      progress {
+      width:67%;
+      height:100%;
+      }
+
+      #activety-bar {
+      text-align:right;
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      padding:3px;
+      background-color:lightgrey;
+      border-top:1px solid grey;
+      }
+
+      .indicator {
+      width:12px;
+      height:12px;
+      display:inline-block;
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:100%;
+      background-image:url('direction_down.png');
+      opacity:0.25;
+      }
+
+      #activety-bar .download {
+      margin-right:10px;
+      background-image:url('direction_down.png');
+      }
+
+      #activety-bar .upload {
+      margin-right:10px;
+      background-image:url('direction_up.png');
+      }
+
+      .modal {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-color:lightgrey;
+      opacity:0.5;
+      }
+
+      .overlay {
+      border:1px solid grey;
+      border-radius:5px;
+      background-color:#EEE;
+      padding:10px;
+      }
+
+      }
+
+    </style>
+
+    <title>Bittorrent Client</title>
+  </head>
+  <body>
+    <div id="site-header-top" style="padding:5px;text-align:right;">
+      <a href="#">downloads</a>
+      <a href="#">users</a> | 
+      <a href="#">logout</a>
+    </div>
+
+    <div id="site-header">bitless <img src="horse.png"/></div>
+
+    <div id="site-content">
+
+      <table border="0">
+	<tr>
+	  <td id="filter">
+	  </td>
+
+	  <td id="main">
+	    <div>
+	      <a title="Add torrent" class="icon" id="add-torrent" href="javascript:void(0);"></a>
+	      <a title="Add torrent from url" class="icon" id="download-torrent" href="javascript:void(0);"></a>
+	      <span class="delimeter"></span>
+	      <a title="Create new torrent" class="icon" id="create-torrent" href="javascript:void(0);"></a>
+	      <span class="delimeter"></span>
+	      <a title="Remove torrent" class="icon" id="remove-torrent" href="javascript:void(0);"></a>
+	      <span class="delimeter"></span>
+	      <a title="Start" class="icon" id="play-torrent" href="javascript:void(0);"></a>
+	      <a title="Pause" class="icon" id="pause-torrent" href="javascript:void(0);"></a>
+	      <a title="Stop" class="icon" id="stop-torrent" href="javascript:void(0);"></a>
+	      <span class="delimeter"></span>
+	      <a title="Configure" class="icon" id="configure" href="javascript:void(0);"></a>
+	    </div>
+
+	    <table id="torrents">
+	      <thead>
+		<tr>
+		  <th style="width:5px;padding:3px;">
+		    <input type="checkbox"/>
+		  </th>
+		  <th>Status</th>
+		  <th>Name</th>
+		  <th>Size</th>
+		  <th>Done</th>
+		  <th>Down speed</th>
+		  <th>Up speed</th>
+		  <th>Uploaded</th>
+		  <th>Ratio</th>
+		</tr>
+	      </thead>
+	      <tbody>
+		
+	      </tbody>
+	    </table>
+
+	    <div id="info-header">
+	      <span>Peers</span>
+	    </div>
+
+	    <table id="info">
+	      <thead>
+		<tr>
+		  <th>IP</th>
+		  <th>Client</th>
+		  <th>Done</th>
+		  <th>Uploaded</th>
+		  <th>Downloaded</th>
+		  <th>Upload speed</th>
+		  <th>Download speed</th>
+		</tr>
+	      </thead>
+	      <tbody>
+	      </tbody>
+	    </table>
+
+	  </td>
+	</tr>
+      </table>
+
+      <div id="activety-bar">
+	<tt>Server activety - </tt>
+	<tt>D:</tt> <div class="download indicator"></div>
+	<tt>U:</tt> <div class="upload indicator"></div>
+      </div>
+
+    </div>
+    
+    <div style="display:none;" class="modal"></div>
+
+    <div id="download-torrent-window">
+      <form>
+	Enter url:<br/>
+	<input type="text" style="width:400px;"/>
+	<div style="margin-top:5px;text-align:right;">
+	  <input type="submit" class="close"/> 
+	  <a class="close" href="javascript:void(0);">Cancel</a>
+	</div>
+      </form>
+    </div>
+
+  </body>
+</html>
