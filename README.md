@@ -6,7 +6,7 @@ Given a torrent file the client is able to download the specified files from oth
 
 # Usage
 
-See `main.py` for an usage example. There is also a web interface created with [http://www.cherrypy.org/][cp] (see the `web/` directory).
+See `main.py` for an usage example. There is also a web interface created with [CherryPy][cp] (see the `web/` directory).
 
 Additionally there is a client console (`console.py`), which starts a chat session in the terminal, allowing you manually to talk to other BitTorrent clients. Run `python console.py [path_to_torrent_file]` and call the `available()` function, after the session has started, to see available commands.
 
