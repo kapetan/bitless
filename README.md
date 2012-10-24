@@ -6,9 +6,43 @@ Given a torrent file the client is able to download the specified files from oth
 
 # Usage
 
-See `main.py` for an usage example. There is also a web interface created with [CherryPy][cp] (see the `web/` directory).
+See `main.py` for an usage example using the `main.Client` class. There is also a web interface created with [CherryPy][cp] (see the `web/` directory).
 
 Additionally there is a client console (`console.py`), which starts a chat session in the terminal, allowing you manually to talk to other BitTorrent clients. Run `python console.py [path_to_torrent_file]` and call the `available()` function, after the session has started, to see available commands.
+
+To download/upload file using the individual library components, following code can be run
+
+```Python
+import torrent
+import manager
+import tracker_client
+import storage
+import peer_id
+
+# Generate an id and initiate an ConnectionAcceptor, which will
+# listen for incomming connections
+my_id = peer_id.generate()
+acceptor = manager.ConnectionAcceptor()
+
+# Parse .torrent file and prepare to retrieve and store file pieces
+meta = torrent.Torrent.from_file('/path/to/file.torrent')
+store = storage.SynchronizedStorage(meta)
+
+coordinator = manager.PeerManager(my_id, acceptor, meta, store)
+
+# Create a composite tracker instance which manages communications with all
+# available trackers specified in the .torrent file
+tracker = tracker_client.AsyncTrackerManager(coordinator, store.missing(), acceptor.port)
+
+# Register tracker and start download/upload
+coordinator.set_tracker(tracker)
+coordinator.start()
+
+# Start listening for incoming connections.
+acceptor.start()
+```
+
+When download/uploading multiple files using different .torrent files, it is possible to reuse the same `ConnectionAcceptor` and peer id (`my_id` in the example). For every new .torrent, a new `torrent.Torrent` instance needs to be created together with a new `storage.SynchronizedStorage`, `manager.PeerManager` and `tracker_client.AsyncTrackerManager`. The acceptor should only be started once.
 
 # License 
 
