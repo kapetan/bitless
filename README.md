@@ -42,7 +42,7 @@ coordinator.start()
 acceptor.start()
 ```
 
-When download/uploading multiple files using different .torrent files, it is possible to reuse the same `ConnectionAcceptor` and peer id (`my_id` in the example). For every new .torrent, a new `torrent.Torrent` instance needs to be created together with a new `storage.SynchronizedStorage`, `manager.PeerManager` and `tracker_client.AsyncTrackerManager`. The acceptor should only be started once.
+When downloading/uploading multiple files using different .torrent files, it is possible to reuse the same `ConnectionAcceptor` and peer id (`my_id` in the example). For every other .torrent file, a new `torrent.Torrent` instance needs to be created together with a new `storage.SynchronizedStorage`, `manager.PeerManager` and `tracker_client.AsyncTrackerManager`. The acceptor should only be started once.
 
 # License 
 
